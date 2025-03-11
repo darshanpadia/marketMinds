@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-fe68n9)g2+!e3z0g=mf04@@dqpi@16^abc*+b)e0plr3%9p6b_
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['marketminds-2gyz.onrender.com', 'localhost', '127.0.0.1']
 
 AUTH_USER_MODEL = 'users.CustomUser'
 
