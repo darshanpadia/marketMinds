@@ -1,0 +1,30 @@
+services:
+  - type: web
+    name: marketminds-web
+    runtime: python
+    region: singapore
+    plan: free
+    buildCommand: |
+      pip install -r requirements_py311.txt
+      python manage.py collectstatic --noinput
+      python manage.py migrate
+    startCommand: gunicorn marketMinds.wsgi:application
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: marketminds-db
+          property: connectionString
+      - key: DJANGO_SETTINGS_MODULE
+        value: marketMinds.settings
+      - key: PYTHON_VERSION
+        value: 3.11
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DEBUG
+        value: "False"
+    autoDeploy: true
+
+databases:
+  - name: marketminds-db
+    region: singapore
+    plan: free
