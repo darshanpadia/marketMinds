@@ -1,6 +1,7 @@
 __pycache__/
 *.pyc
 venv/
+venv_render/
 db.sqlite3
 media/
 .DS_Store
