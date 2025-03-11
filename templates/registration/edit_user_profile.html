@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% load static %}
+
+
+{% block content %}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                  {% if request.GET.source == 'profile' %}
+                      <h3 class="text-center">Edit Profile</h3>
+                  {% else %}
+                      <h3 class="text-center">Setup Profile</h3>
+                  {% endif %}
+                </div>
+                <div class="card-body">
+                  <form method="POST" action="" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {% for field in form %}
+                      <p>
+                        {{ field.label_tag }}<br>
+                        {{ field }}
+                        <!-- {% if field.help_text %}
+                          <small style="color: grey">{{ field.help_text }}</small>
+                        {% endif %} -->
+                        {% for error in field.errors %}
+                          <p style="color: red">{{ error }}</p>
+                        {% endfor %}
+                      </p>
+                    {% endfor %}
+                    <div class="form-buttons "> 
+						            <input type="submit" value="Send" class="btn btn-primary">
+                        {% if request.GET.source == 'profile' %}
+                              <a href="{%url 'users:login' %}"  class="btn btn-secondary"  role="button">Cancel</a>
+                        {% else %}
+                              <a href="{%url 'users:login' %}"  class="btn btn-secondary"  role="button">Skip</a> 
+                        {% endif %}
+                    </div>
+                  </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,284 @@
+{% extends 'base.html' %}
+
+{% load static %}
+{% block extra_head %}
+<!-- Include Bootstrap 5 CSS and JS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+{% endblock %}
+
+{% block content %}
+<!-- Stock/Crypto Information -->
+<div class="bg-1 d-flex align-items-center bg-secondary text-white rounded p-3 mb-4">
+  <img src="{{ asset.image.url }}" alt="{{ asset.name }} Icon" class="img-fluid me-3" style="width: 60px; height: 60px;">
+  <div>
+    <h3 class="mb-0">{{ asset.name }} ({{ asset.symbol }})</h3>
+    <h5 class="mb-0 {% if asset.price_change > 0 %}text-success 
+      {% elif asset.price_change < 0 %}text-danger 
+      {% else %}text-light{% endif %}">
+      <b>₹{{ asset.close_price }}</b>
+    </h5>
+    
+    <p class="mb-0 {% if asset.price_change > 0 %}text-success 
+      {% elif asset.price_change < 0 %}text-danger 
+      {% else %}text-light{% endif %}" >
+      <b>{{ asset.price_change }} ({{ asset.percent_change }}%)</b>
+    </p>
+    
+    <p class="mb-0">Volume: {{ asset.volume }}</p>
+  </div>
+</div>
+
+<!-- Tabs for Historical Data and Forecasting -->
+<div class="bg-2 p-4 rounded shadow">
+  <ul class="nav nav-tabs" id="dataTabs" role="tablist">
+    <li class="nav-item">
+      <button class="nav-link active" id="historical-tab" data-bs-toggle="tab" data-bs-target="#historical" type="button" role="tab" aria-controls="historical" aria-selected="true">Historical Data</button>
+    </li>
+    <li class="nav-item">
+      <button class="nav-link" id="forecasting-tab" data-bs-toggle="tab" data-bs-target="#forecasting" type="button" role="tab" aria-controls="forecasting" aria-selected="false">Forecasting</button>
+    </li>
+  </ul>
+  <div class="tab-content mt-3">
+    <!-- Historical Data Tab Content -->
+    <div class="tab-pane fade show active" id="historical" role="tabpanel" aria-labelledby="historical-tab">
+      <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+        <li class="nav-item">
+          <button class="nav-link active" id="1day-historical-tab" data-bs-toggle="pill" data-bs-target="#1day-historical" type="button" role="tab" aria-controls="1day-historical" aria-selected="true">1 Day</button>
+        </li>
+        <li class="nav-item">
+          <button class="nav-link" id="7day-historical-tab" data-bs-toggle="pill" data-bs-target="#7day-historical" type="button" role="tab" aria-controls="7day-historical" aria-selected="false">7 Day</button>
+        </li>
+        <li class="nav-item">
+          <button class="nav-link" id="1month-historical-tab" data-bs-toggle="pill" data-bs-target="#1month-historical" type="button" role="tab" aria-controls="1month-historical" aria-selected="false">1 Month</button>
+        </li>
+        <li class="nav-item">
+          <button class="nav-link" id="1year-historical-tab" data-bs-toggle="pill" data-bs-target="#1year-historical" type="button" role="tab" aria-controls="1year-historical" aria-selected="false">1 Year</button>
+        </li>
+      </ul>
+      <div class="tab-content">
+        <!-- 1 Day Historical -->
+        <div class="tab-pane fade show active" id="1day-historical" role="tabpanel" aria-labelledby="1day-historical-tab">
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Opening</th>
+                <th>Closing</th>
+                <th>High</th>
+                <th>Low</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for data in hist_day %}
+              <tr>
+                <td>{{ data.date|date:"Y-m-d H:i:s" }}</td>
+                <td>₹{{ data.open_price }}</td>
+                <td>₹{{ data.close_price }}</td>
+                <td>₹{{ data.high }}</td>
+                <td>₹{{ data.low }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        <!-- 7 Day Historical -->
+        <div class="tab-pane fade" id="7day-historical" role="tabpanel" aria-labelledby="7day-historical-tab">
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Opening</th>
+                <th>Closing</th>
+                <th>High</th>
+                <th>Low</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for data in hist_week %}
+              <tr>
+                <td>{{ data.date|date:"F d, Y" }}</td>
+                <td>₹{{ data.open_price }}</td>
+                <td>₹{{ data.close_price }}</td>
+                <td>₹{{ data.high }}</td>
+                <td>₹{{ data.low }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        <!-- 1 Month Historical -->
+        <div class="tab-pane fade" id="1month-historical" role="tabpanel" aria-labelledby="1month-historical-tab">
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Opening</th>
+                <th>Closing</th>
+                <th>High</th>
+                <th>Low</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for data in hist_month %}
+              <tr>
+                <td>{{ data.date|date:"F d, Y" }}</td>
+                <td>₹{{ data.open_price }}</td>
+                <td>₹{{ data.close_price }}</td>
+                <td>₹{{ data.high }}</td>
+                <td>₹{{ data.low }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        <!-- 1 Year Historical -->
+        <div class="tab-pane fade" id="1year-historical" role="tabpanel" aria-labelledby="1year-historical-tab">
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Opening</th>
+                <th>Closing</th>
+                <th>High</th>
+                <th>Low</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for data in hist_year %}
+              <tr>
+                <td>{{ data.date|date:"F d, Y" }}</td>
+                <td>₹{{ data.open_price }}</td>
+                <td>₹{{ data.close_price }}</td>
+                <td>₹{{ data.high }}</td>
+                <td>₹{{ data.low }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Forecasting Tab Content -->
+    <div class="tab-pane fade" id="forecasting" role="tabpanel" aria-labelledby="forecasting-tab">
+      <ul class="nav nav-pills mb-3" id="forecast-pills-tab" role="tablist">
+        <li class="nav-item">
+          <button class="nav-link active" id="1day-forecast-tab" data-bs-toggle="pill" data-bs-target="#1day-forecast" type="button" role="tab" aria-controls="1day-forecast" aria-selected="true">1 Day</button>
+        </li>
+        <li class="nav-item">
+          <button class="nav-link" id="7day-forecast-tab" data-bs-toggle="pill" data-bs-target="#7day-forecast" type="button" role="tab" aria-controls="7day-forecast" aria-selected="false">7 Days</button>
+        </li>
+        <li class="nav-item">
+          <button class="nav-link" id="1month-forecast-tab" data-bs-toggle="pill" data-bs-target="#1month-forecast" type="button" role="tab" aria-controls="1month-forecast" aria-selected="false">1 Month</button>
+        </li>
+        <li class="nav-item">
+          <button class="nav-link" id="1year-forecast-tab" data-bs-toggle="pill" data-bs-target="#1year-forecast" type="button" role="tab" aria-controls="1year-forecast" aria-selected="false">1 Year</button>
+        </li>
+      </ul>
+      <div class="tab-content">
+        <!-- 1 Day Forecast -->
+        <div class="tab-pane fade show active" id="1day-forecast" role="tabpanel" aria-labelledby="1day-forecast-tab">
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Open</th>
+                <th>Close</th>
+                <th>High</th>
+                <th>Low</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for prediction in pred_day %}
+              <tr>
+                <td>{{ prediction.date|date:"Y-m-d H:i:s" }}</td>
+                <td>₹{{ prediction.predicted_open_price }}</td>
+                <td>₹{{ prediction.predicted_price }}</td>
+                <td>₹{{ prediction.predicted_high }}</td>
+                <td>₹{{ prediction.predicted_low }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        <!-- 7 Day Forecast -->
+        <div class="tab-pane fade" id="7day-forecast" role="tabpanel" aria-labelledby="7day-forecast-tab">
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Open</th>
+                <th>Close</th>
+                <th>High</th>
+                <th>Low</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for prediction in pred_week %}
+              <tr>
+                <td>{{ prediction.date|date:"F d, Y" }}</td>
+                <td>₹{{ prediction.predicted_open_price }}</td>
+                <td>₹{{ prediction.predicted_price }}</td>
+                <td>₹{{ prediction.predicted_high }}</td>
+                <td>₹{{ prediction.predicted_low }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        <!-- 1 Month Forecast -->
+        <div class="tab-pane fade" id="1month-forecast" role="tabpanel" aria-labelledby="1month-forecast-tab">
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Open</th>
+                <th>Close</th>
+                <th>High</th>
+                <th>Low</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for prediction in pred_month %}
+              <tr>
+                <td>{{ prediction.date|date:"F d, Y" }}</td>
+                <td>₹{{ prediction.predicted_open_price }}</td>
+                <td>₹{{ prediction.predicted_price }}</td>
+                <td>₹{{ prediction.predicted_high }}</td>
+                <td>₹{{ prediction.predicted_low }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        <!-- 1 Year Forecast -->
+        <div class="tab-pane fade" id="1year-forecast" role="tabpanel" aria-labelledby="1year-forecast-tab">
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Open</th>
+                <th>Close</th>
+                <th>High</th>
+                <th>Low</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for prediction in pred_year %}
+              <tr>
+                <td>{{ prediction.date|date:"F d, Y" }}</td>
+                <td>₹{{ prediction.predicted_open_price }}</td>
+                <td>₹{{ prediction.predicted_price }}</td>
+                <td>₹{{ prediction.predicted_high }}</td>
+                <td>₹{{ prediction.predicted_low }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

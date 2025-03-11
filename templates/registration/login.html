@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+    Login
+{% endblock %}
+
+
+{% block content %}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="text-center">Login</h3>
+                </div>
+                <div class="card-body">
+                  <form method="POST" action="" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    
+                    {% if form.non_field_errors %}
+                      <div class="alert alert-danger">
+                        {{ form.non_field_errors }}
+                      </div>
+                    {% endif %} 
+                    {% for field in form %}
+                      <p>
+                        {{ field.label_tag }}<br>
+                        {{ field }}
+                        <!-- {% if field.help_text %}
+                          <small style="color: grey">{{ field.help_text }}</small>
+                          <br>
+                        {% endif %} -->
+                        {% for error in field.errors %}
+                          <p style="color: red">{{ error }}</p>
+                        {% endfor %}
+                      </p>
+                    {% endfor %}
+                    <button type="submit" class="btn btn-primary btn-block">Login</button>
+                    <br>
+                    <p class="text-center">Forgot your password <a href="{%url 'users:password-reset'%}">Reset Password</a></p>
+		                <p class="text-center">Don't have a account? <a href="{%url 'users:signup'%}">Join Now</a></p>
+                  </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

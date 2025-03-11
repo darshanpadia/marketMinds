@@ -1,0 +1,147 @@
+{% extends "base.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <!-- Tabs for Stocks and Cryptos -->
+    <div class="tab-content-container bg-1">
+        <ul class="nav nav-tabs justify-content-center" id="marketTabs" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" id="stocks-tab" data-bs-toggle="tab" href="#stocks" role="tab" aria-controls="stocks" aria-selected="true">Stocks</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="cryptos-tab" data-bs-toggle="tab" href="#cryptos" role="tab" aria-controls="cryptos" aria-selected="false">Cryptos</a>
+            </li>
+        </ul>
+        <div class="tab-content mt-3">
+            <!-- Stocks Tab Content -->
+            <div class="tab-pane fade show active" id="stocks" role="tabpanel" aria-labelledby="stocks-tab">
+                <div class="tab-container p-3">
+                    <!-- <div class="d-flex justify-content-center">
+                        <input type="text" id="searchBox" placeholder="Search assets..." autocomplete="off">
+                        <ul id="searchResults"></ul>
+                        <button class="btn btn-primary ml-2">Add</button>
+                    </div> -->
+
+                    <!-- Combined Table for Live Prices and Predictions -->
+                    <div class="table-container mt-3">
+                        <div class="text-center">
+                            <h5>Latest Data and Predictions</h5> <!-- Centered title for both sections -->
+                        </div>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Current Price</th>
+                                    <th>Change (%)</th>
+                                    <th>Volume</th>
+                                    <th>Predicted Price</th>
+                                    <th>Confidence (%)</th>
+                                    <th>Duration (Days)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for stock in stocks %}
+                                <tr>
+                                    <td>{{ stock.asset.name }}</td>
+                                    <td style="color: {% if stock.asset.price_change < 0 %}#FF6347{% else %}#4CAF50{% endif %};">{{ stock.asset.close_price|floatformat:2 }}</td>
+                                    <td style="color: {% if stock.asset.percent_change < 0 %}#FF6347{% else %}#4CAF50{% endif %};">{{ stock.asset.percent_change|floatformat:3 }} %</td>
+                                    <td>{{ stock.asset.volume|floatformat:2 }}</td>
+                                    <td style="color: {% if stock.top_prediction.predicted_price < crypto.asset.close_price %}#FF6347{% else %}#4CAF50{% endif %};">{{ stock.top_prediction.predicted_price|floatformat:2 }}</td>
+                                    <td>{{ stock.top_prediction.confidence|floatformat:2 }} %</td>
+                                    <td>{{ stock.top_prediction.duration }} Days</td>
+                                    <td>
+                                        <button class="btn btn-danger btn-sm remove-watchlist-btn" data-symbol="{{ stock.asset.symbol }}">
+                                            Remove
+                                        </button>
+                                    </td>                                    
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cryptos Tab Content -->
+            <div class="tab-pane fade" id="cryptos" role="tabpanel" aria-labelledby="cryptos-tab">
+                <div class="tab-container p-3">
+                    <!-- <div class="d-flex justify-content-center">
+                        <input type="text" class="form-control w-25" placeholder="Select a Cryptocurrency">
+                        <button class="btn btn-primary ml-2">Add</button>
+                    </div> -->
+
+                    <!-- Combined Table for Live Prices and Predictions -->
+                    <div class="table-container mt-3">
+                        <div class="text-center">
+                            <h5>Latest Data and Predictions</h5> <!-- Centered title for both sections -->
+                        </div>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Current Price</th>
+                                    <th>Change (%)</th>
+                                    <th>Volume</th>
+                                    <th>Predicted Price</th>
+                                    <th>Confidence (%)</th>
+                                    <th>Duration (Days)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for crypto in cryptos %}
+                                <tr>
+                                    <td>{{ crypto.asset.name }}</td>
+                                    <td style="color: {% if crypto.asset.price_change < 0 %}#FF6347{% else %}#4CAF50{% endif %};">{{ crypto.asset.close_price|floatformat:2 }}</td>
+                                    <td style="color: {% if crypto.asset.percent_change < 0 %}#FF6347{% else %}#4CAF50{% endif %};">{{ crypto.asset.percent_change|floatformat:3 }} %</td>
+                                    <td>{{ crypto.asset.volume|floatformat:2 }}</td>
+                                    <td style="color: {% if crypto.top_prediction.predicted_price < crypto.asset.close_price %}#FF6347{% else %}#4CAF50{% endif %};">{{ crypto.top_prediction.predicted_price|floatformat:2 }}</td>
+                                    <td>{{ crypto.top_prediction.confidence|floatformat:2 }} %</td>
+                                    <td>{{ crypto.top_prediction.duration }} Days</td>
+                                    <td>
+                                        <button class="btn btn-danger btn-sm remove-watchlist-btn" data-symbol="{{ crypto.asset.symbol }}">
+                                            Remove
+                                        </button>
+                                    </td>                                                                      
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block scripts%}
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        document.querySelectorAll(".remove-watchlist-btn").forEach(button => {
+            button.addEventListener("click", function () {
+                const symbol = this.getAttribute("data-symbol");
+    
+                fetch(`/dashboard/remove_from_watchlist/${symbol}/`, {
+                    method: "POST",
+                    headers: {
+                        "X-CSRFToken": "{{ csrf_token }}",
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({})
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.message === "Removed from watchlist") {
+                        this.closest("tr").remove();  // Remove row from table
+                    } else {
+                        alert(data.message);
+                    }
+                })
+                .catch(error => console.error("Error:", error));
+            });
+        });
+    });
+</script>    
+{% endblock %}
+
