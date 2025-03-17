@@ -23,12 +23,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-fe68n9)g2+!e3z0g=mf04@@dqpi@16^abc*+b)e0plr3%9p6b_'
+SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get("DJANGO_DEBUG", "False") == "True"
+DEBUG = os.environ.get("DEBUG", "False") == "True"
 
-ALLOWED_HOSTS = ['marketminds-2gyz.onrender.com']
+ALLOWED_HOSTS = [os.environ.get("ALLOWED_HOSTS").split(" ")]
 
 AUTH_USER_MODEL = 'users.CustomUser'
 
@@ -100,10 +100,11 @@ WSGI_APPLICATION = 'marketMinds.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
+datase_url = os.environ.get("DATABASE_URL")
 DATABASES = {
     'default': dj_database_url.config(
         # Replace this value with your local database's connection string.
-        default='postgresql://postgres:postgres@localhost:5432/marketminds-db',
+        default=datase_url,
         conn_max_age=600
     )
 }
