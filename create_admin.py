@@ -1,4 +1,4 @@
-# create_admin.py
+#!/usr/bin/env python
 import os
 import django
 from django.contrib.auth import get_user_model
