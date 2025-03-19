@@ -4,6 +4,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
+from cloudinary.models import CloudinaryField
 from django.core.validators import RegexValidator
 import requests
 import json
@@ -17,12 +18,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     date = models.DateTimeField(default=timezone.now)
     first_name = models.CharField(_('first name'), max_length=30, blank=True, null=True)
     last_name = models.CharField(_('last name'), max_length=30, blank=True, null=True)
-    profile_pic = models.URLField(
-        _('profile picture URL'),
-        blank=True,
-        null=True,
-        default='https://res.cloudinary.com/dsu3jrywn/image/upload/v1742366111/blank-profile_ye4tm3.jpg'
-    )
+    profile_pic = CloudinaryField('image')
     image_url = models.URLField(_('image URL'), blank=True, null=True)
     phone = models.CharField(max_length=10, blank=True, null=True)
     REQUIRED_FIELDS = [] 
