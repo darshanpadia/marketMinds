@@ -15,7 +15,11 @@
                 </div>
                 <div class="card-body">
                     <div class="text-center">
-                      <img src="{{ user.profile_pic.url }}" alt="avatar" class="rounded-circle img-fluid" style="width: 150px;">                 
+                      {% if user.profile_pic %}
+                          <img src="{{ user.profile_pic }}" alt="avatar" class="rounded-circle img-fluid" style="width: 150px;">
+                      {% else %}
+                          <img src="https://res.cloudinary.com/dsu3jrywn/image/upload/v1742366111/blank-profile_ye4tm3.jpg" alt="avatar" class="rounded-circle img-fluid" style="width: 150px;">
+                      {% endif %}                 
                         <h5 class="my-3">{{ user.first_name }} {{ user.last_name }}</h5>
                     </div>
                     <div class="row">
