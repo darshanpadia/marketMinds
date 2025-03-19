@@ -21,7 +21,6 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         upload_to="profile_pics/",
         default="https://res.cloudinary.com/dsu3jrywn/image/upload/v1742366111/blank-profile_ye4tm3.jpg"
     )
-
     image_url = models.URLField(_('image URL'), blank=True, null=True)
     phone = models.CharField(max_length=10, blank=True, null=True)
     REQUIRED_FIELDS = [] 
