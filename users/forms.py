@@ -13,6 +13,8 @@ from django.forms import ModelForm
 
 from django.contrib.auth import authenticate
 
+from cloudinary.forms import CloudinaryFileField
+
 class CustomUserCreationForm(UserCreationForm):
 
     class Meta:
@@ -43,6 +45,7 @@ class CustomSignUpForm(UserCreationForm):
 
 
 class EditProfileForm(ModelForm):
+    profile_pic = CloudinaryFileField()
     class Meta:
         model = get_user_model()
         fields = ('profile_pic', 'first_name', 'last_name', 'phone')
