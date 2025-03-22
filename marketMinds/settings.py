@@ -55,6 +55,22 @@ CELERY_BEAT_SCHEDULE = {
     
 }
 
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
+    'DEFAULT_THROTTLE_CLASSES': [
+        'rest_framework.throttling.UserRateThrottle',
+    ],
+    'DEFAULT_THROTTLE_RATES': {
+        'user': '5/min',
+    },
+}
+
 
 # Application definition
 
@@ -69,6 +85,8 @@ INSTALLED_APPS = [
     'cloudinary',
     'users',
     'dashboard',
+    'rest_framework',
+    'rest_framework.authtoken',
 ]
 
 MIDDLEWARE = [
@@ -169,3 +187,24 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_URL = 'users:login'
 LOGIN_REDIRECT_URL = "home"  #specify where to redirect the user upon a successful login.
 LOGOUT_REDIRECT_URL = "home" #specify where to redirect the user upon a successful logout.
+
+# settings.py
+
+...
+
+if not DEBUG:
+    # Security for production
+    CSRF_COOKIE_SECURE = True #Ensures CSRF cookies are sent over https connections
+    SESSION_COOKIE_SECURE = True
+
+    # If you're using HTTPS (Render uses HTTPS)
+    SECURE_SSL_REDIRECT = True # redirects all http requests to https 
+    # SECURE_HSTS_SECONDS = 3600 #Enables hsts for 1 hour
+    # SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    # SECURE_HSTS_PRELOAD = True
+
+    # Optional but good for extra safety
+    SECURE_BROWSER_XSS_FILTER = True # enables the browser's built-in XSS protection(usually in older browsers)
+    SECURE_CONTENT_TYPE_NOSNIFF = True # prevents the browser from trying to guess the file type
+
+
