@@ -18,7 +18,14 @@ from django.contrib.auth.views import (
     PasswordResetConfirmView,
     PasswordResetCompleteView
 )
+
 from .api_views import RegisterView, LoginView, ProfileView, PasswordResetView
+
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenRefreshView,
+)
+
 
 
 app_name = 'users'  # Define the namespace for your app
@@ -37,4 +44,6 @@ urlpatterns = [
     path('api/login/', LoginView.as_view(), name='api-login'),
     path('api/user-profile/', ProfileView.as_view(), name='api-profile'),
     path('api/password-reset/', PasswordResetView.as_view(), name='api-password-reset'),
+    path('api/token/', TokenObtainPairView.as_view(), name="token_obtain_pair"),
+    path('api/token/refresh/', TokenRefreshView.as_view(), name="token_refresh"),
 ]

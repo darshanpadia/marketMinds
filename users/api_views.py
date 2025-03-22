@@ -6,6 +6,7 @@ from rest_framework.authtoken.models import Token
 from django.contrib.auth import authenticate
 from .serializers import RegisterSerializer, UserSerializer, ChangePasswordSerializer, LoginSerializer
 from django.contrib.auth import get_user_model
+from rest_framework_simplejwt.tokens import RefreshToken
 
 User = get_user_model()
 
@@ -21,9 +22,10 @@ class LoginView(APIView):
         serializer = LoginSerializer(data=request.data)
         if serializer.is_valid():
             user = serializer.validated_data['user']
-            token, _ = Token.objects.get_or_create(user=user)
+            refresh = RefreshToken.for_user(user)
             return Response({
-                "token": token.key,
+                "refresh": str(refresh),
+                "access": str(refresh.access_token),
                 "user": UserSerializer(user).data
             })
         return Response(serializer.errors, status=status.HTTP_401_UNAUTHORIZED)
