@@ -220,10 +220,12 @@ if DEBUG:
     ]
 else:
     # In production, you can allow your frontend Render domain here
+    API_URL = os.environ.get('VITE_API_BASE_URL')
     CORS_ALLOWED_ORIGINS = [
         os.environ.get('VITE_API_BASE_URL'),
     ]
-    CSRF_TRUSTED_ORIGINS = [
-        os.environ.get('VITE_API_BASE_URL'),
-    ]
+    if API_URL:
+        CSRF_TRUSTED_ORIGINS = [f"https://{API_URL}"]
+    else:
+        CSRF_TRUSTED_ORIGINS = []
 
