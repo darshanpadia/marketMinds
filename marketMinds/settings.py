@@ -90,6 +90,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -98,7 +99,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
+    
 ]
 
 ROOT_URLCONF = 'marketMinds.urls'
@@ -219,13 +220,14 @@ if DEBUG:
         "http://localhost:5173",
     ]
 else:
-    # In production, you can allow your frontend Render domain here
-    API_URL = os.environ.get('VITE_API_BASE_URL')
+    FRONTEND_URL = os.environ.get("VITE_API_BASE_URL")  # e.g. "https://your-react-app.onrender.com"
+
     CORS_ALLOWED_ORIGINS = [
-        os.environ.get('VITE_API_BASE_URL'),
-    ]
-    if API_URL:
-        CSRF_TRUSTED_ORIGINS = [f"https://{API_URL}"]
-    else:
-        CSRF_TRUSTED_ORIGINS = []
+        FRONTEND_URL
+    ] if FRONTEND_URL else []
+
+    CSRF_TRUSTED_ORIGINS = [
+        FRONTEND_URL
+    ] if FRONTEND_URL else []
+
 
