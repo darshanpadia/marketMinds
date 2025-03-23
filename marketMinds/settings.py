@@ -86,6 +86,7 @@ INSTALLED_APPS = [
     'dashboard',
     'rest_framework',
     'rest_framework_simplejwt',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
@@ -97,6 +98,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'marketMinds.urls'
@@ -206,4 +208,22 @@ if not DEBUG:
     SECURE_BROWSER_XSS_FILTER = True # enables the browser's built-in XSS protection(usually in older browsers)
     SECURE_CONTENT_TYPE_NOSNIFF = True # prevents the browser from trying to guess the file type
 
+
+# CORS Settings (allow Vite dev server only in development)
+if DEBUG:
+    CORS_ALLOWED_ORIGINS = [
+        "http://localhost:5173",  # Vite dev server
+        "http://localhost:3000",
+    ]
+    CSRF_TRUSTED_ORIGINS = [
+        "http://localhost:5173",
+    ]
+else:
+    # In production, you can allow your frontend Render domain here
+    CORS_ALLOWED_ORIGINS = [
+        os.environ.get('VITE_API_BASE_URL'),
+    ]
+    CSRF_TRUSTED_ORIGINS = [
+        os.environ.get('VITE_API_BASE_URL'),
+    ]
 
