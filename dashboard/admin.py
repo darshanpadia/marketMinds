@@ -37,7 +37,6 @@ class AssetAdmin(admin.ModelAdmin):
             asset.percent_change = (latest_data.get('Close') - hist_day.iloc[-2].get('Close')) / hist_day.iloc[-2].get('Close')
 
             return asset  # Return updated asset instance
-
         except Exception as e:
             raise ValueError(f"Error fetching data for {symbol}: {e}")
 
@@ -49,13 +48,14 @@ class AssetAdmin(admin.ModelAdmin):
             return
 
         """Save model after fetching latest data."""
-        obj = self.fetch_and_update_asset_data(obj)  # Update asset data
-        super().save_model(request, obj, form, change)
-
-
-        # Save historical data and predictions
-        form.save_historical_data(obj)
-        form.predict_asset_prices(obj)
+        try:
+            obj = self.fetch_and_update_asset_data(obj)  # Update asset data
+            super().save_model(request, obj, form, change)
+            # Save historical data and predictions
+            form.save_historical_data(obj)
+            form.predict_asset_prices(obj)
+        except ValueError as e:
+            self.message_user(request,f"{e}", messages.ERROR)
 
     @admin.action(description="Update historical data and predictions")
     def update_historical_and_predictions(self, request, queryset):
