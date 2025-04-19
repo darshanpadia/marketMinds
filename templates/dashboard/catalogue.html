@@ -13,75 +13,79 @@
         <a class="nav-link" id="cryptos-tab" data-bs-toggle="tab" href="#cryptos" role="tab" aria-controls="cryptos" aria-selected="false">Cryptos</a>
       </li>
     </ul>
-    <div class="tab-content">
-      
+    <div class="tab-content mt-3">
       <!-- Stocks Tab Content -->
       <div class="tab-pane fade show active" id="stocks" role="tabpanel" aria-labelledby="stocks-tab">
-        <div class="table-container" style="background-image: url('/path/to/your/image.jpg');">
-          <table class="table">
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Stock Code</th>
-                <th>Price</th>
-                <th>Change</th>
-                <th>Volume</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for stock in stocks %}
-              <tr>
-                <td>{{ stock.name }}</td>
-                <td>{{ stock.symbol }}</td>
-                <td style="color: {% if stock.price_change < 0 %}#FF6347{% else %}#4CAF50{% endif %};">{{ stock.open_price }}</td>
-                <td style="color: {% if stock.price_change < 0 %}#FF6347{% else %}#4CAF50{% endif %};">{{ stock.percent_change }}%</td>
-                <td>{{ stock.volume }}</td>
-                <td> <a href="{% url 'dashboard:individual-asset' symbol=stock.symbol %}" class="btn btn-primary">View</a> </td>
-                <td>
-                  <form action="{% url 'dashboard:add-to-watchlist' symbol=stock.symbol %}" method="POST">
-                    {% csrf_token %}
-                    <button type="submit" class="btn btn-primary">Add to Watchlist</button>
-                  </form>                
-                </td>
-              </tr>
-              {% endfor %}
-            </tbody>
-          </table>
+        <div class="tab-container p-3">
+          <div class="table-container mt-3" style="background-image: url('/path/to/your/image.jpg');">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Stock Code</th>
+                  <th>Price</th>
+                  <th>Change</th>
+                  <th>Volume</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for stock in stocks %}
+                <tr>
+                  <td>{{ stock.name }}</td>
+                  <td>{{ stock.symbol }}</td>
+                  <td style="color: {% if stock.price_change < 0 %}#FF6347{% else %}#4CAF50{% endif %};">{{ stock.open_price }}</td>
+                  <td style="color: {% if stock.price_change < 0 %}#FF6347{% else %}#4CAF50{% endif %};">{{ stock.percent_change }}%</td>
+                  <td>{{ stock.volume }}</td>
+                  <td> <a href="{% url 'dashboard:individual-asset' symbol=stock.symbol %}" class="btn btn-primary">View</a> </td>
+                  <td>
+                    <form action="{% url 'dashboard:add-to-watchlist' symbol=stock.symbol %}" method="POST">
+                      {% csrf_token %}
+                      <button type="submit" class="btn btn-primary">Add to Watchlist</button>
+                    </form>                
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
+        
 
       <!-- Cryptos Tab Content -->
       <div class="tab-pane fade" id="cryptos" role="tabpanel" aria-labelledby="cryptos-tab">
-        <div class="table-container" style="background-image: url('/path/to/your/image.jpg');">
-          <table class="table">
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Crypto Code</th>
-                <th>Price</th>
-                <th>Change</th>
-                <th>Volume</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for crypto in cryptos %}
-              <tr>
-                <td>{{ crypto.name }}</td>
-                <td>{{ crypto.symbol }}</td>
-                <td style="color: {% if crypto.price_change < 0 %}#FF6347{% else %}#4CAF50{% endif %};">{{ crypto.open_price }}</td>
-                <td style="color: {% if crypto.price_change < 0 %}#FF6347{% else %}#4CAF50{% endif %};">{{ crypto.percent_change }}%</td>
-                <td>{{ crypto.volume }}</td>
-                <td> <a href="{% url 'dashboard:individual-asset' symbol=crypto.symbol %}" class="btn btn-primary">View</a> </td>
-                <td>
-                  <form action="{% url 'dashboard:add-to-watchlist' symbol=crypto.symbol %}" method="POST">
-                    {% csrf_token %}
-                    <button type="submit" class="btn btn-primary">Add to Watchlist</button>
-                  </form>                
-                </td>
-              </tr>
-              {% endfor %}
-            </tbody>
-          </table>
+        <div class="tab-content p-3">
+          <div class="table-container" style="background-image: url('/path/to/your/image.jpg');">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Crypto Code</th>
+                  <th>Price</th>
+                  <th>Change</th>
+                  <th>Volume</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for crypto in cryptos %}
+                <tr>
+                  <td>{{ crypto.name }}</td>
+                  <td>{{ crypto.symbol }}</td>
+                  <td style="color: {% if crypto.price_change < 0 %}#FF6347{% else %}#4CAF50{% endif %};">{{ crypto.open_price }}</td>
+                  <td style="color: {% if crypto.price_change < 0 %}#FF6347{% else %}#4CAF50{% endif %};">{{ crypto.percent_change }}%</td>
+                  <td>{{ crypto.volume }}</td>
+                  <td> <a href="{% url 'dashboard:individual-asset' symbol=crypto.symbol %}" class="btn btn-primary">View</a> </td>
+                  <td>
+                    <form action="{% url 'dashboard:add-to-watchlist' symbol=crypto.symbol %}" method="POST">
+                      {% csrf_token %}
+                      <button type="submit" class="btn btn-primary">Add to Watchlist</button>
+                    </form>                
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
 

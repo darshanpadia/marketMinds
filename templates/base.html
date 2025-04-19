@@ -41,7 +41,7 @@
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink">
                             <li><a class="dropdown-item" href="{% url 'users:view-user-profile' %}">View Profile</a></li>
-                            <li><a class="dropdown-item" href="#">Edit Profile</a></li>
+                            <li><a class="dropdown-item" href="{% url 'users:edit-user-profile' %}">Edit Profile</a></li>
                             <li><hr class="dropdown-divider"></li>
                             <li>
                                 <form method="POST" action="{% url 'users:logout' %}">

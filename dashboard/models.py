@@ -18,7 +18,7 @@ class Asset(models.Model):
     low = models.FloatField()
     price_change = models.FloatField()
     percent_change = models.FloatField()
-    image = models.ImageField(upload_to='asset_images/', default="asset_images/blank-product.jpg")
+    image = models.ImageField(upload_to='asset_images/', default="/../static/images/blank-product.jpg")
 
 
     def __str__(self):
