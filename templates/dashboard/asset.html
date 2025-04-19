@@ -8,6 +8,14 @@
 {% endblock %}
 
 {% block content %}
+<style>
+  .up {
+    color: green;
+  }
+  .down {
+    color: red;
+  }
+</style>
 <!-- Stock/Crypto Information -->
 <div class="bg-1 d-flex align-items-center bg-secondary text-white rounded p-3 mb-4">
   <img src="{{ asset.image.url }}" alt="{{ asset.name }} Icon" class="img-fluid me-3" style="width: 60px; height: 60px;">
@@ -73,10 +81,10 @@
               {% for data in hist_day %}
               <tr>
                 <td>{{ data.date|date:"Y-m-d H:i:s" }}</td>
-                <td>₹{{ data.open_price }}</td>
-                <td>₹{{ data.close_price }}</td>
-                <td>₹{{ data.high }}</td>
-                <td>₹{{ data.low }}</td>
+                <td class="{{ data.open_trend }}">₹{{ data.open_price }}</td>
+                <td class="{{ data.close_trend }}">₹{{ data.close_price }}</td>
+                <td class="{{ data.high_trend }}">₹{{ data.high }}</td>
+                <td class="{{ data.low_trend }}">₹{{ data.low }}</td>
               </tr>
               {% endfor %}
             </tbody>
@@ -98,10 +106,10 @@
               {% for data in hist_week %}
               <tr>
                 <td>{{ data.date|date:"F d, Y" }}</td>
-                <td>₹{{ data.open_price }}</td>
-                <td>₹{{ data.close_price }}</td>
-                <td>₹{{ data.high }}</td>
-                <td>₹{{ data.low }}</td>
+                <td class="{{ data.open_trend }}">₹{{ data.open_price }}</td>
+                <td class="{{ data.close_trend }}">₹{{ data.close_price }}</td>
+                <td class="{{ data.high_trend }}">₹{{ data.high }}</td>
+                <td class="{{ data.low_trend }}">₹{{ data.low }}</td>
               </tr>
               {% endfor %}
             </tbody>
@@ -123,10 +131,10 @@
               {% for data in hist_month %}
               <tr>
                 <td>{{ data.date|date:"F d, Y" }}</td>
-                <td>₹{{ data.open_price }}</td>
-                <td>₹{{ data.close_price }}</td>
-                <td>₹{{ data.high }}</td>
-                <td>₹{{ data.low }}</td>
+                <td class="{{ data.open_trend }}">₹{{ data.open_price }}</td>
+                <td class="{{ data.close_trend }}">₹{{ data.close_price }}</td>
+                <td class="{{ data.high_trend }}">₹{{ data.high }}</td>
+                <td class="{{ data.low_trend }}">₹{{ data.low }}</td>
               </tr>
               {% endfor %}
             </tbody>
@@ -148,10 +156,10 @@
               {% for data in hist_year %}
               <tr>
                 <td>{{ data.date|date:"F d, Y" }}</td>
-                <td>₹{{ data.open_price }}</td>
-                <td>₹{{ data.close_price }}</td>
-                <td>₹{{ data.high }}</td>
-                <td>₹{{ data.low }}</td>
+                <td class="{{ data.open_trend }}">₹{{ data.open_price }}</td>
+                <td class="{{ data.close_trend }}">₹{{ data.close_price }}</td>
+                <td class="{{ data.high_trend }}">₹{{ data.high }}</td>
+                <td class="{{ data.low_trend }}">₹{{ data.low }}</td>
               </tr>
               {% endfor %}
             </tbody>
@@ -193,10 +201,10 @@
               {% for prediction in pred_day %}
               <tr>
                 <td>{{ prediction.date|date:"Y-m-d H:i:s" }}</td>
-                <td>₹{{ prediction.predicted_open_price }}</td>
-                <td>₹{{ prediction.predicted_price }}</td>
-                <td>₹{{ prediction.predicted_high }}</td>
-                <td>₹{{ prediction.predicted_low }}</td>
+                <td class="{{ prediction.open_trend }}">₹{{ prediction.open_price }}</td>
+                <td class="{{ prediction.close_trend }}">₹{{ prediction.close_price }}</td>
+                <td class="{{ prediction.high_trend }}">₹{{ prediction.high }}</td>
+                <td class="{{ prediction.low_trend }}">₹{{ prediction.low }}</td>
               </tr>
               {% endfor %}
             </tbody>
@@ -218,10 +226,10 @@
               {% for prediction in pred_week %}
               <tr>
                 <td>{{ prediction.date|date:"F d, Y" }}</td>
-                <td>₹{{ prediction.predicted_open_price }}</td>
-                <td>₹{{ prediction.predicted_price }}</td>
-                <td>₹{{ prediction.predicted_high }}</td>
-                <td>₹{{ prediction.predicted_low }}</td>
+                <td class="{{ prediction.open_trend }}">₹{{ prediction.open_price }}</td>
+                <td class="{{ prediction.close_trend }}">₹{{ prediction.close_price }}</td>
+                <td class="{{ prediction.high_trend }}">₹{{ prediction.high }}</td>
+                <td class="{{ prediction.low_trend }}">₹{{ prediction.low }}</td>
               </tr>
               {% endfor %}
             </tbody>
@@ -243,10 +251,10 @@
               {% for prediction in pred_month %}
               <tr>
                 <td>{{ prediction.date|date:"F d, Y" }}</td>
-                <td>₹{{ prediction.predicted_open_price }}</td>
-                <td>₹{{ prediction.predicted_price }}</td>
-                <td>₹{{ prediction.predicted_high }}</td>
-                <td>₹{{ prediction.predicted_low }}</td>
+                <td class="{{ prediction.open_trend }}">₹{{ prediction.open_price }}</td>
+                <td class="{{ prediction.close_trend }}">₹{{ prediction.close_price }}</td>
+                <td class="{{ prediction.high_trend }}">₹{{ prediction.high }}</td>
+                <td class="{{ prediction.low_trend }}">₹{{ prediction.low }}</td>
               </tr>
               {% endfor %}
             </tbody>
@@ -268,10 +276,10 @@
               {% for prediction in pred_year %}
               <tr>
                 <td>{{ prediction.date|date:"F d, Y" }}</td>
-                <td>₹{{ prediction.predicted_open_price }}</td>
-                <td>₹{{ prediction.predicted_price }}</td>
-                <td>₹{{ prediction.predicted_high }}</td>
-                <td>₹{{ prediction.predicted_low }}</td>
+                <td class="{{ prediction.open_trend }}">₹{{ prediction.open_price }}</td>
+                <td class="{{ prediction.close_trend }}">₹{{ prediction.close_price }}</td>
+                <td class="{{ prediction.high_trend }}">₹{{ prediction.high }}</td>
+                <td class="{{ prediction.low_trend }}">₹{{ prediction.low }}</td>
               </tr>
               {% endfor %}
             </tbody>

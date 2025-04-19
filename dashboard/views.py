@@ -113,10 +113,50 @@ def individual_asset(request, symbol):
     hist_year = HistoricalData.objects.filter(asset=asset, timeframe='year').order_by('-date')
 
     # Fetch the forecasts
-    pred_day = PredictedData.objects.filter(asset=asset, timeframe='day').order_by('date')[1::]
+    pred_day = PredictedData.objects.filter(asset=asset, timeframe='day').order_by('date')
     pred_week = PredictedData.objects.filter(asset=asset, timeframe='week').order_by('date')
     pred_month = PredictedData.objects.filter(asset=asset, timeframe='month').order_by('date')
     pred_year = PredictedData.objects.filter(asset=asset, timeframe='year').order_by('date')
+
+    def get_trends(hist_data):
+        # Prepare a new list with comparison flags
+        enhanced_data = []
+
+        for i in range(len(hist_data)):
+            row = hist_data[i]
+            prev = hist_data[i + 1] if i + 1 < len(hist_data) else None
+            enhanced_data.append({
+                'date': row.date,
+                'open_price': row.open_price,
+                'close_price': row.close_price,
+                'high': row.high,
+                'low': row.low,
+                'open_trend' : 'up' if prev and row.open_price > prev.open_price else 'down' if prev else 'neutral',
+                'close_trend': 'up' if prev and row.close_price > prev.close_price else 'down' if prev else 'neutral',
+                'high_trend': 'up' if prev and row.high > prev.high else 'down' if prev else 'neutral',
+                'low_trend': 'up' if prev and row.low > prev.low else 'down' if prev else 'neutral',
+            })
+        return enhanced_data
+    
+    def get_pred_trends(pred_data):
+        # Prepare a new list with comparison flags
+        enhanced_data = []
+
+        for i in range(len(pred_data)):
+            row = pred_data[i]
+            prev = pred_data[i - 1] if i > 0 else None
+            enhanced_data.append({
+                'date': row.date,
+                'open_price': row.predicted_open_price,
+                'close_price': row.predicted_price,
+                'high': row.predicted_high,
+                'low': row.predicted_low,
+                'open_trend' : 'up' if prev and row.predicted_open_price > prev.predicted_open_price else 'down' if prev else 'neutral',
+                'close_trend': 'up' if prev and row.predicted_price > prev.predicted_price else 'down' if prev else 'neutral',
+                'high_trend': 'up' if prev and row.predicted_high > prev.predicted_high else 'down' if prev else 'neutral',
+                'low_trend': 'up' if prev and row.predicted_low > prev.predicted_low else 'down' if prev else 'neutral',
+            })
+        return enhanced_data
 
     # for asset in hist_day:
     #     print(asset)
@@ -126,14 +166,14 @@ def individual_asset(request, symbol):
 
     context = {
         'asset': asset,
-        'hist_day': hist_day,
-        'hist_week' : hist_week,
-        'hist_month' : hist_month,
-        'hist_year' : hist_year,
-        'pred_day': pred_day,
-        'pred_week' : pred_week,
-        'pred_month' : pred_month,
-        'pred_year' : pred_year,
+        'hist_day': get_trends(hist_day),
+        'hist_week' : get_trends(hist_week),
+        'hist_month' : get_trends(hist_month),
+        'hist_year' : get_trends(hist_year),
+        'pred_day': get_pred_trends(pred_day),
+        'pred_week' : get_pred_trends(pred_week),
+        'pred_month' : get_pred_trends(pred_month),
+        'pred_year' : get_pred_trends(pred_year),
 
     }
     return render(request, 'dashboard/asset.html', context)
