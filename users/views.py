@@ -11,6 +11,7 @@ from django.contrib import messages
 from .models import CustomUser
 from django.views.generic.edit import DeleteView
 from django.shortcuts import redirect, render
+from django.urls import reverse
 
 from users.forms import CustomSignUpForm, CustomLoginForm, CustomPasswordResetForm, CustomPasswordResetConfirmForm, EditProfileForm
 
@@ -66,11 +67,12 @@ class CustomSignUpView(generic.CreateView):
 
     # To autologin after successful signup
     def form_valid(self, form):
-        response = super(CustomSignUpView, self).form_valid(form)
+        response = super().form_valid(form)
         username, password = form.cleaned_data.get('username'), form.cleaned_data.get('password1')
         user = form.save()
         login(self.request, user)
-        return response
+        self.success_url = f"{reverse('users:edit-user-profile')}?source=signup"
+        return redirect(self.success_url)
 
 class CustomLoginView(LoginView):
     form_class = CustomLoginForm

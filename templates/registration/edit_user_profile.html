@@ -31,16 +31,18 @@
                       </p>
                     {% endfor %}
                     <div class="form-buttons "> 
-						            <input type="submit" value="Send" class="btn btn-primary">
-                        {% if request.GET.source == 'profile' %}
-                              <a href="{%url 'users:login' %}"  class="btn btn-secondary"  role="button">Cancel</a>
-                        {% else %}
-                              <a href="{%url 'users:login' %}"  class="btn btn-secondary"  role="button">Skip</a> 
+						            <input type="submit" value="Save" class="btn btn-primary">
+                        {% if request.GET.source == 'signup' %}
+                              <a href="{%url 'users:login' %}"  class="btn btn-secondary"  role="button">Skip</a>
+                        {% else  %}
+                          <a href="javascript:history.back()" class="btn btn-secondary">Cancel</a> 
                         {% endif %}
                     </div>
                   </form>
                 </div>
-                <a href="{% url 'users:delete-user-account' %}" class="btn btn-outline-danger">Delete My Account</a>
+                {% if request.GET.source != 'signup' %}
+                  <a href="{% url 'users:delete-user-account' %}" class="btn btn-outline-danger">Delete My Account</a>
+                {% endif %}
             </div>
         </div>
     </div>
