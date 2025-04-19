@@ -9,6 +9,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
 from .models import CustomUser
+from django.views.generic.edit import DeleteView
 from django.shortcuts import redirect, render
 
 from users.forms import CustomSignUpForm, CustomLoginForm, CustomPasswordResetForm, CustomPasswordResetConfirmForm, EditProfileForm
@@ -16,6 +17,20 @@ from users.forms import CustomSignUpForm, CustomLoginForm, CustomPasswordResetFo
 
 # Create your views here.
 
+User = get_user_model()
+
+class DeleteUserAccountView(LoginRequiredMixin, DeleteView):
+    model = User
+    template_name = "registration/delete_user_confirm.html"
+    success_url = reverse_lazy('home')
+
+    def get_object(self, queryset = None):
+        return self.request.user
+    
+    def delete(self, request, *args, **kwargs):
+        messages.success(request, "Your account has been deleted.")
+        logout(request)
+        return super().delete(request, *args, **kwargs)
 
 
 class EditUserProfileView(LoginRequiredMixin, UpdateView):
