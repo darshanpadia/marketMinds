@@ -33,8 +33,10 @@
         <div class="collapse navbar-collapse justify-content-end" id="navbarNavAltMarkup">
             <div class="navbar-nav ms-auto">
                 {% if user.is_authenticated %}
-                    <a class="nav-link" href="{% url 'home' %}">Home</a>
-                    <a class="nav-link" href="{% url 'dashboard:catalogue' %}">Catalogue</a>
+                {% url 'home' as home_url %}
+                {% url 'dashboard:catalogue' as catalogue_url %}
+                <a class="nav-link {% if request.path == home_url %}active{% endif %}" href="{{ home_url }}">Home</a>
+                <a class="nav-link {% if request.path == catalogue_url %}active{% endif %}" href="{{ catalogue_url }}">Catalogue</a>                            
                     <div class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             Profile

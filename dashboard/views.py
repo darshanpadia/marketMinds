@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .models import Asset, Watchlist, PredictedData, HistoricalData
 from .forms import WatchlistForm
+from urllib.parse import urlparse,urlunparse,parse_qs,urlencode
 
 from django.views.decorators.csrf import csrf_exempt
 import json
@@ -12,23 +13,31 @@ import json
 def add_to_watchlist_view(request, symbol):
     """Adds an asset to the user's watchlist via a standard form submission."""
     if request.method == "POST":
+        active_tab = request.POST.get('active_tab', 'stocks')
         try:
             asset = Asset.objects.get(symbol=symbol)
             user = request.user
-
             if Watchlist.objects.filter(user=user, asset=asset).exists():
                 messages.warning(request, "Already in watchlist")
             else:
                 Watchlist.objects.create(user=user, asset=asset)
                 messages.success(request, "Added to watchlist")
-
-            return redirect(request.META.get('HTTP_REFERER', 'dashboard:home'))  # Redirects back to the page
         except Asset.DoesNotExist:
             messages.error(request, "Asset not found")
-            return redirect('dashboard:home')
+    else:
+        messages.error(request, "Invalid request")
+    referer = request.META.get("HTTP_REFERER", "/")
+    parsed_url = urlparse(referer)
+    query_params = parse_qs(parsed_url.query)
 
-    messages.error(request, "Invalid request")
-    return redirect('dashboard:home')
+    # Update or add the 'tab' query param
+    query_params['tab'] = [active_tab]
+
+    # Rebuild the URL with updated query
+    new_query = urlencode(query_params, doseq=True)
+    cleaned_url = urlunparse(parsed_url._replace(query=new_query))
+
+    return redirect(cleaned_url)
 
 @login_required
 @csrf_exempt  # For AJAX POST requests

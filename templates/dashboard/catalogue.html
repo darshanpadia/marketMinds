@@ -28,7 +28,7 @@
       <!-- Stocks Tab Content -->
       <div class="tab-pane fade show active" id="stocks" role="tabpanel" aria-labelledby="stocks-tab">
         <div class="tab-container p-3">
-          <div class="table-container mt-3">
+          <div class="table-container">
             <table class="table">
               <thead>
                 <tr>
@@ -49,10 +49,11 @@
                   <td>{{ stock.volume }}</td>
                   <td> <a href="{% url 'dashboard:individual-asset' symbol=stock.symbol %}" class="btn btn-primary">View</a> </td>
                   <td>
-                    <form action="{% url 'dashboard:add-to-watchlist' symbol=stock.symbol %}" method="POST">
+                    <form action="{% url 'dashboard:add-to-watchlist' symbol=stock.symbol %}" method="POST" class="watchlist-form">
                       {% csrf_token %}
+                      <input type="hidden" name="active_tab" value="">
                       <button type="submit" class="btn btn-primary">Add to Watchlist</button>
-                    </form>                
+                    </form>                                    
                   </td>
                 </tr>
                 {% endfor %}
@@ -87,10 +88,11 @@
                   <td>{{ crypto.volume }}</td>
                   <td> <a href="{% url 'dashboard:individual-asset' symbol=crypto.symbol %}" class="btn btn-primary">View</a> </td>
                   <td>
-                    <form action="{% url 'dashboard:add-to-watchlist' symbol=crypto.symbol %}" method="POST">
+                    <form action="{% url 'dashboard:add-to-watchlist' symbol=crypto.symbol %}" method="POST" class="watchlist-form">
                       {% csrf_token %}
+                      <input type="hidden" name="active_tab" value="">
                       <button type="submit" class="btn btn-primary">Add to Watchlist</button>
-                    </form>                
+                    </form>                 
                   </td>
                 </tr>
                 {% endfor %}
@@ -104,3 +106,27 @@
   </div>
 </div>
 {% endblock %}
+{% block scripts %}
+<script>
+  // Inject active tab value into the form before submission
+  document.querySelectorAll('.watchlist-form').forEach(form => {
+    form.addEventListener('submit', function () {
+      const activeTab = document.querySelector('.tab-pane.active')?.id;
+      this.querySelector('[name="active_tab"]').value = activeTab;
+    });
+  });
+
+  // Activate the correct tab based on the URL query string (?tab=stocks or ?tab=cryptos)
+  document.addEventListener('DOMContentLoaded', function () {
+    const urlParams = new URLSearchParams(window.location.search);
+    const tab = urlParams.get('tab');
+    if (tab) {
+      const tabTrigger = document.querySelector(`a[href="#${tab}"]`);
+      if (tabTrigger) {
+        new bootstrap.Tab(tabTrigger).show();
+      }
+    }
+  });
+</script>
+{% endblock %}
+
