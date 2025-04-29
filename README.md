@@ -58,7 +58,7 @@ Users can view,edit and delte their profile.
 Password reset and recovery functionality via email.
 
 
-Key Componentes:
+📁 Key Components
 
 marketMinds - Django project root.
 
