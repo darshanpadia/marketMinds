@@ -35,25 +35,13 @@ DEBUG = os.environ.get("DEBUG", "False") == "True"
 ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS").split(" ")
 
 AUTH_USER_MODEL = 'users.CustomUser'
+# CELERY_BROKER_URL = 'django://'
+# CELERY_RESULT_BACKEND = 'django-db'
 
-# # set default django settings for the celery program
-# os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'marketMinds')
-
-# app = Celery('marketMinds')
-
-# # using django database as the broker
-# app.config_from_object('django.conf:settings', namespace='CELERY')
-
-# # load task modules from all registered django app configs
-# app.autodiscover_tasks()
-
-CELERY_BROKER_URL = 'django://'
-CELERY_RESULT_BACKEND = 'django-db'
-
-# run tasks at specific intervals
-CELERY_BEAT_SCHEDULE = {
+# # run tasks at specific intervals
+# CELERY_BEAT_SCHEDULE = {
     
-}
+# }
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
@@ -230,4 +218,31 @@ else:
         FRONTEND_URL
     ] if FRONTEND_URL else []
 
+CELERY_BROKER_URL = "redis://redis:6379/0"
+CELERY_RESULT_BACKEND = "redis://redis:6379/0"
+CELERY_ACCEPT_CONTENT = ["json"]
+CELERY_TASK_SERIALIZER = "json"
+CELERY_RESULT_SERIALIZER = "json"
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'simple': {
+            'format': '[%(asctime)s] %(levelname)s:%(name)s: %(message)s'
+        },
+    },
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'simple',
+        },
+    },
+    'loggers': {
+        'celery': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+        },
+    },
+}
 

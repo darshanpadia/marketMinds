@@ -1,5 +1,4 @@
 import os
-from django.conf import settings
 from celery import Celery
 
 # set the default django settings module for celery
@@ -11,10 +10,10 @@ app = Celery('marketMinds')
 # the configuration object to child processes.
 # - namespace='CELERY' means all celery-related configuration keys
 #   should have a `CELERY_` prefix.
-app.config_from_object(f'django.conf:{settings.__name__}', namespace='CELERY')
+app.config_from_object('django.conf:settings', namespace='CELERY')
 
 # auto discover tasks for all registered django app configs.
-app.autodiscover_tasks()
+app.autodiscover_tasks(['dashboard'])
 
 @app.task(bind=True, ignore_result=True)
 def debug_task(self):
